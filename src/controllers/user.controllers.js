@@ -5,6 +5,24 @@ import { uploadOnCloudinary , deleteFromCloudinary} from "../utils/cloudinary.js
 import { ApiResponse} from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 
+const generateAccessAndRefereshTokens = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Something went wrong while generating referesh and access token"
+    );
+  }
+};
 
 const registerUser = asyncHandler( async(req, res) => {
     const {fullname, email, username, password} = req.body
@@ -190,17 +208,18 @@ const refereshAccessToken = asyncHandler( async (req, res) => {
             secure: process.env.NODE_ENV === "production",
         }
 
-        const {accessToken, refreshToken, newRefreshToken} = await generateAccessAndRefereshTokens(user._id)
+        const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)
 
         return res
         .status(200)
         .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", newRefreshToken, options)
+        .cookie("refreshToken", refreshToken, options)
         .json(
             new ApiResponse(
                 200,
-                {accessToken,
-                    refreshToken: newRefreshToken
+                {
+                  accessToken,
+                  refreshToken
                 },
                 "Access token refreshed successfully"
             )
@@ -449,26 +468,6 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       )
     );
 });
-
-const generateAccessAndRefereshTokens = async (userId) => {
-  try {
-    const user = await User.findById(userId);
-
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
-
-    user.refreshToken = refreshToken;
-    await user.save({ validateBeforeSave: false });
-
-    return { accessToken, refreshToken };
-  } catch (error) {
-    throw new ApiError(
-      500,
-      "Something went wrong while generating referesh and access token"
-    );
-  }
-};
-
 
 export{
     registerUser,
