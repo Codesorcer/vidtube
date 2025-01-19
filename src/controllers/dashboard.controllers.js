@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Video } from "../models/video.models.js";
-import { Subscription } from "../models/subscriptions.model.js";
+import { Subscription } from "../models/subscription.models.js";
 import { Like } from "../models/like.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -76,6 +76,5 @@ const getChannelVideos = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Failed to retrieve channel videos.");
   }
 });
-
 
 export { getChannelStats, getChannelVideos };
