@@ -6,11 +6,10 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createTweet = asyncHandler(async (req, res) => {
-  //TODO: create tweet
   const { content } = req.body;
 
-  if(!content){
-    throw new ApiError(400, "Tweet content is required")
+  if (content.trim() === "") {
+    throw new ApiError(400, "Tweet content is required");
   }
 
   const user = req.user._id;
@@ -32,9 +31,11 @@ const createTweet = asyncHandler(async (req, res) => {
 });
 
 const getUserTweets = asyncHandler(async (req, res) => {
-  // TODO: get user tweets
   const userId = req.params.userId
 
+  if(!isValidObjectId(userId)){
+    throw new ApiError(400, "Invalid user ID");
+  }
     try {
         const tweets = await Tweet.find({
           owner: userId,
@@ -42,7 +43,11 @@ const getUserTweets = asyncHandler(async (req, res) => {
 
         return res
                 .status(200)
-                .json(new ApiResponse(200, {tweets}))
+                .json(new ApiResponse(
+                  200, 
+                  {tweets},
+                  "Tweets fetched successfully"
+                ))
     } catch (error) {
         console.log("Error fetching user tweets.")
 
@@ -52,23 +57,30 @@ const getUserTweets = asyncHandler(async (req, res) => {
 });
 
 const updateTweet = asyncHandler(async (req, res) => {
-  //TODO: update tweet
   const tweetId = req.params.tweetId;
   const { updatedContent } = req.body;
+  const userId = req.user._id;
 
-  if(!updatedContent){
+  if (!isValidObjectId(tweetId)) {
+    throw new ApiError(400, "Invalid tweet ID");
+  }
+
+  if(updatedContent.trim() === ""){
     throw new ApiError(400, "Bad Request: Updated content is required.")
   }
 
-  const updatedTweet = await Tweet.findByIdAndUpdate(
-    tweetId,
+  const updatedTweet = await Tweet.findOneAndUpdate(
     {
-        $set: {
-            content: updatedContent,
-        },
+      _id: tweetId,
+      owner: userId,
     },
-    {new : true},
-  )
+    {
+      $set: {
+        content: updatedContent,
+      },
+    },
+    { new: true }
+  );
 
   if(!updatedTweet){
     throw new ApiError(404, "Tweet not found")
@@ -80,7 +92,6 @@ const updateTweet = asyncHandler(async (req, res) => {
 });
 
 const deleteTweet = asyncHandler(async (req, res) => {
-  //TODO: delete tweet
   const tweetId = req.params.tweetId;
   const deletedTweet = await Tweet.findByIdAndDelete(tweetId); 
 
