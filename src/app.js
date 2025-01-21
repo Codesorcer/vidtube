@@ -40,6 +40,18 @@ app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/playlist", playlistRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
 
+app.use((req, res, next) => {
+  console.log("HTTP Method - " + req.method + " , URL - " + req.url);
+  next();
+});
+
+app.get("/api", (req, res) => {
+  res.json("hello");
+});
+app.post("/api/submit", (req, res) => {
+  res.json({ msg: "data submitted successfully" });
+});
+
 // http://localhost:8000/api/v1/users/register
 
 export {app}

@@ -7,7 +7,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "server": "nodemon src/index.js",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently -k \"npm run server\" \"npm run client\""
   },
   "keywords": [
     "nodejs",
@@ -25,6 +27,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.5.1",
+    "concurrently": "^9.1.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
