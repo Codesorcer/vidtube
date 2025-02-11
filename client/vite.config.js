@@ -1,19 +1,17 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import dotenv from "dotenv";
+import tailwindcss from "@tailwindcss/vite";
+import process from 'process';
 
-dotenv.config({
-  path: "../.env",
-});
+const PORT = process.env.VITE_PORT || 8000;
 
-const PORT = process.env.PORT;
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   server: {
     proxy: {
       "/api": {
-        target: `http://localhost:${PORT}/`,
+        target: `http://localhost:8000/`,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

@@ -1,31 +1,41 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import NavBar from "./components/NavBar/NavBar";
+import HomePage from "./pages/HomePage";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
-  const [msg, setMsg] = useState("");
-
-  const onSubmitHandler = async (event) => {
-    event.preventDefault();
-    const response = await fetch("/api/submit", {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify({ value: event.target[0].value }),
-    });
-    const data = await response.json();
-    setMsg(data.msg);
-  };
-
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <NavBar>
+          <HomePage />
+        </NavBar>
+      ),
+    },
+    {
+      path: "/users/register",
+      element: (
+        <NavBar>
+          <RegisterPage />
+        </NavBar>
+      ),
+    },
+    {
+      path: "/users/login",
+      element: (
+        <NavBar>
+          <LoginPage />
+        </NavBar>
+      )
+    }
+  ]);
   return (
-    <div className="searchbar">
-      <form onSubmit={onSubmitHandler}>
-        <input type="text" name="text" id="text" />
-        <button type="submit">search</button>
-      </form>
-      {msg && <h1>{msg}</h1>}
-    </div>
+    <>
+      <RouterProvider router={router} />
+    </>
   );
 }
 
