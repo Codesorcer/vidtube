@@ -3,8 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
 import VidTubePage from "./pages/vidTubePage";
 import HomePage from "./pages/HomePage";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/Auth/RegisterPage";
+import LoginPage from "./pages/Auth/LoginPage";
+import UploadVideoPage from "./pages/Upload/UploadVideoPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -37,6 +38,14 @@ function App() {
       element: (
         <NavBar>
           <HomePage />
+        </NavBar>
+      ),
+    },
+    {
+      path: "/uploadVideo",
+      element: (
+        <NavBar>
+          <UploadVideoPage />
         </NavBar>
       ),
     },

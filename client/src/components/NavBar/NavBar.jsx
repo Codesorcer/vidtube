@@ -19,6 +19,9 @@ export default function NavBar({children}) {
               <Link to="/users/login">Login</Link>
             </li>
             <li>
+              <Link to="/uploadVideo">Upload Video</Link>
+            </li>
+            <li>
               <LogoutBtn />
             </li>
           </ul>
