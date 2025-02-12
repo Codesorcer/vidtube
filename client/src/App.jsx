@@ -1,6 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
+import VidTubePage from "./pages/vidTubePage";
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -11,7 +12,7 @@ function App() {
       path: "/",
       element: (
         <NavBar>
-          <HomePage />
+          <VidTubePage />
         </NavBar>
       ),
     },
@@ -29,8 +30,16 @@ function App() {
         <NavBar>
           <LoginPage />
         </NavBar>
-      )
-    }
+      ),
+    },
+    {
+      path: "/home",
+      element: (
+        <NavBar>
+          <HomePage />
+        </NavBar>
+      ),
+    },
   ]);
   return (
     <>
